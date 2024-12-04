@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Book;
+use Illuminate\Http\Request;
+
+class BookController extends Controller
+{
+    public function index()
+    {
+        $books = Book::all();
+        return view('products', compact('books'));
+    }
+
+    public function addBooktoCart($id)
+    {
+        $book = Book::findOrFail($id);
+        $cart = session()->get('cart', []);
+        echo "<pre>";
+        print_r($cart);
+        echo "<hr>";
+         if(isset($cart[$id])) {
+        // if(in_array($id,$cart)){
+            $cart[$id]['quantity']++;
+        } else {
+            $cart[$id] = [
+                "name" => $book->name,
+                "quantity" => 1,
+                "price" => $book->price,
+                "image" => $book->image
+            ];
+        }
+        session()->put('cart', $cart);
+        //print_r($cart);
+        //dd(session('cart'));
+         return redirect()->back()->with('success', 'Book has been added to cart!');
+    }
+
+    public function bookCart()
+    {
+        return view('cart');
+    }
+
+    public function deleteProduct(Request $request)
+    {
+        if($request->id) {
+            $cart = session()->get('cart');
+            if(isset($cart[$request->id])) {
+                unset($cart[$request->id]);
+                session()->put('cart', $cart);
+            }
+            session()->flash('success', 'Book successfully deleted.');
+        }
+    }
+
+
+    public function updateCart(Request $request)
+    {
+        if($request->id && $request->quantity){
+            $cart = session()->get('cart');
+            $cart[$request->id]["quantity"] = $request->quantity;
+            session()->put('cart', $cart);
+            session()->flash('success', 'Updated cart.');
+        }
+    }
+}
