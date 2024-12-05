@@ -53,9 +53,7 @@ class BookController extends Controller
             session()->flash('success', 'Book successfully deleted.');
         }
     }
-
-
-    public function updateCart(Request $request)
+ public function updateCart(Request $request)
     {
         if($request->id && $request->quantity){
             $cart = session()->get('cart');
@@ -63,5 +61,9 @@ class BookController extends Controller
             session()->put('cart', $cart);
             session()->flash('success', 'Updated cart.');
         }
+    }
+
+    public function checkout(){
+        return  view('checkout');
     }
 }
