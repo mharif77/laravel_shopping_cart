@@ -18,7 +18,7 @@
                     <tr rowId="{{ $id }}">
                         <td data-th="Product">
                             <div class="row">
-                                <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" class="card-img-top" />
+                                <div class="col-sm-3 hidden-xs"><img src="{{asset('images')}}/{{ $details['image'] }}" class="card-img-top" />
                                 </div>
                                 <div class="col-sm-9">
                                     <h4 class="nomargin">{{ $details['name'] }}</h4>

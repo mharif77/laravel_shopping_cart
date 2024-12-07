@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 
 class StripeController extends Controller
@@ -15,10 +16,33 @@ class StripeController extends Controller
     {
         \Stripe\Stripe::setApiKey(config('stripe.sk'));
  
+        $orderNum = time();
         $productname = $request->get('productDetails');
         $totalprice = $request->get('total');
         $two0 = "00";
         $total = "$totalprice$two0";
+
+             // order entry
+
+        DB::table('orders')->insert([
+            'order_number' =>$orderNum,
+           'total_amount' => $totalprice,
+           'payment_method' => 'paypal'
+        ]);
+
+        // order Details entry
+
+            foreach (session()->get('cart')as $key => $val){
+                // dd($val['name']);
+
+                DB::table('order_details')->insert([
+                    'order_number' =>$orderNum,
+                   'book_id' => $key,
+                   'quantity' => $val['quantity'],
+                   'price' => $val['price'],
+                ]);
+        
+            };
  
         $session = \Stripe\Checkout\Session::create([
             'line_items'  => [
@@ -47,4 +71,14 @@ class StripeController extends Controller
     {
         return view('success');
     }
+
+    // public function productOrder()
+    // {
+    //     $cart = session()->get('cart');
+    // //    echo  $cart->name;
+    //     // dd($cart);
+
+
+    //     // DB::table('order');
+    // }
 }
