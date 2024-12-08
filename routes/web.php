@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,4 @@ Route::get('/checkout', [BookController::class, 'checkout'])->name('shopping.che
 Route::post('/session', 'App\Http\Controllers\StripeController@session')->name('session');
 Route::get('/success', 'App\Http\Controllers\StripeController@success')->name('success');
 // Route::get('productOrder', [StripeController::class, 'productOrder']);
+Route::get('/invoice', [InvoiceController::class, 'InvoiceGenerate']);
